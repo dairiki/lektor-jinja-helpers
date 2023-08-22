@@ -11,6 +11,7 @@ from typing import TypeVar
 from lektor.pluginsystem import Plugin
 
 from . import html
+from .ansible import import_ansible_filters_and_tests
 
 _T = TypeVar("_T")
 _U = TypeVar("_U")
@@ -63,3 +64,5 @@ class JinjaHelpersPlugin(Plugin):  # type: ignore[misc]
         jinja_env.globals["helpers"] = helpers = SimpleNamespace()
         for name, f in GLOBALS.items():
             setattr(helpers, name, f)
+
+        import_ansible_filters_and_tests(jinja_env)

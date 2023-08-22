@@ -5,12 +5,21 @@ and globals to Lektor’s Jinja environment.
 
 These additions are hopefully useful in Lektor templates.
 
+Additionally, any [Ansible] filter or test plugins that may be
+installed in the Python environment will also be made available.
+Ansible provides a great variety of [filters][ansible filters] and
+[tests][ansible tests], some of which may be useful in Lektor
+templates.
+
 ## “Namespacing”
 
 To avoid namespace pollution, currently, all of the bits added to the
 jinja environment by this plugin are added under the `helpers`
 namespace. That is, all the names of these filters, tests and globals
 start with `helpers.`
+
+Any filters and tests from ansible plugins are made available under
+their fully qualified names (e.g. `ansible.builtin.flatten`).
 
 ## Jinja Filters
 
@@ -132,8 +141,18 @@ E.g., to access the current date
 {{ date.now().isoformat() }}
 ```
 
-## Ideas / To Do
+## Ansible Filter and Test Plugins
 
+If [Ansible] is installed in the Python environment, whatever ansible
+[filter][ansible filters] and [test][ansible tests] plugins that can
+be found will be made available to the Jinja environment.
+
+Installing [ansible-core] (total install size ~30M) in your virtualenv
+will provide access to the filters and tests from the
+`ansible.builtin` module.  Installing [ansible] (total install size
+~500M) will provide access to all the standard modules.
+
+## Ideas / To Do
 
 - Perhaps the *namespacing* of all new features under the `helpers.`
   prefix should be made configurable.
@@ -160,3 +179,8 @@ Jeff Dairiki <dairiki@dairiki.org>
 [map filter]: <https://jinja.palletsprojects.com/en/3.1.x/templates/#jinja-filters.map>
 [select filter]: <https://jinja.palletsprojects.com/en/3.1.x/templates/#jinja-filters.select>
 [import-module]: <https://docs.python.org/3/library/importlib.html#importlib.import_module>
+
+[Ansible]: <https://pypi.org/project/ansible/>
+[ansible-core]: <https://pypi.org/project/ansible-core/>
+[ansible filters]: <https://docs.ansible.com/ansible/latest/collections/index_filter.html>
+[ansible tests]: <https://docs.ansible.com/ansible/latest/collections/index_test.html>
