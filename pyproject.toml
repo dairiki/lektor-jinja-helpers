@@ -1,0 +1,59 @@
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[project]
+name = "lektor-jinja-helpers"
+version = "0.1.0a1"
+description = "An assortment of Jinja filters, tests, and globals for Lektor"
+authors = [
+    {name = "Jeff Dairiki", email = "dairiki@dairiki.org"},
+]
+dependencies = [
+    "excerpt-html>=0.2.0",
+    "markupsafe>=2.1.3",
+    "html5lib>=1.1",
+    "beautifulsoup4>=4.12.2",
+]
+requires-python = ">=3.8"
+readme = "README.md"
+license = {text = "BSD-3-Clause"}
+
+[project.entry-points."lektor.plugins"]
+jinja-helpers = "lektor_jinja_helpers:JinjaHelpersPlugin"
+
+[tool.pdm.scripts]
+cover = "pytest --cov=lektor_jinja_helpers --cov-report=term-missing --cov-fail-under=100 tests -ra"
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "lektor>=3.3.10",
+    "mypy>=1.5.1",
+    "flake8>=5.0.4",
+    "flake8-bugbear>=23.3.12",
+    "pytest>=7.4.0",
+    "types-beautifulsoup4>=4.12.0.6",
+    "pytest-cov>=4.1.0",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    '^\s*\.\.\.\s*$',
+    '^\s*raise\s+NotImplementedError\(\)\s*$',
+    '^if TYPE_CHECKING:\s*',
+]
+
+[tool.mypy]
+files = [
+    "src/**/*.py",
+    "tests/**/*.py",
+]
+strict = true
+
+[[tool.mypy.overrides]]
+module = [
+    "excerpt_html",
+    "lektor.*",
+]
+ignore_missing_imports = true
