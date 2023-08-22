@@ -2,7 +2,7 @@ import pytest
 from markupsafe import Markup
 
 from .testlib import RendererFixture
-from lektor_jinja_helpers.html import _HeadingLevelNormalizer
+from lektor_jinja_helpers.html_helpers import _HeadingLevelNormalizer
 
 
 def test_excerpt_html_escapes_str(renderer: RendererFixture) -> None:

@@ -10,7 +10,8 @@ from typing import TypeVar
 
 from lektor.pluginsystem import Plugin
 
-from . import html
+from . import db_helpers
+from . import html_helpers
 from .ansible import import_ansible_filters_and_tests
 
 _T = TypeVar("_T")
@@ -40,8 +41,10 @@ def do_call(
 
 
 FILTERS = {
-    "adjust_heading_levels": html.adjust_heading_levels,
-    "excerpt_html": html.excerpt_html,
+    "adjust_heading_levels": html_helpers.adjust_heading_levels,
+    "excerpt_html": html_helpers.excerpt_html,
+    "lineage": db_helpers.lineage,
+    "descendants": db_helpers.descendants,
     "call": do_call,
 }
 TESTS = {

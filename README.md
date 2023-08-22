@@ -88,6 +88,53 @@ If no suitable truncation point can be found, the original text is returned.
 This filter provides a thin wrapper around the [excerpt-html] library.
 
 
+### helpers.lineage(include\_self=True)
+
+This filter expects a Lektor DB *source object* as input, and returns
+a generator generator that yields first (optionally) the input
+object, then the object's parent, and so on up the tree.
+
+The `include_self` parameter controls whether the input object is
+included in the results.
+
+As an example, this can be used to determine if any of a pages ancestors is undiscoverable:
+
+```j2
+{% if this | helpers.lineage | rejectattr('is_discoverable') | first is defined -%}
+  This page or one of its ancestors is marked undiscoverable!
+{% endif -%}
+```
+
+### helpers.descendants(include\_undiscoverable=False, include\_hidden=False, include\_self=True, depth\_first=False)
+
+Iterate over descendant pages.
+
+This Jinja filter expects a Lektor Page as input and returns a
+generator which yields first (optionally) the input page, then the
+page's descendants.
+
+The `include_self` parameter controls whether the input page
+is included in the results.
+
+The `depth_first` parameter controls the traversal order.  By
+default, the traversal is breadth-first.
+
+The `include_hidden` and `include_undiscoverable` parameters control
+whether hidden and undiscoverable pages are included in the result.
+Note that, since hidden pages are always undiscoverable, to include hidden pages,
+one must set `include_undiscoverable` as well as `include_hidden`.
+
+As an example, a list of all images contained by all discoverable
+pages on the site may be obtained as follows. (This may be a slow operation
+if there are many pages and/or images.)
+
+```j2
+{% set itertools = helpers.import_module("itertools") -%}
+{% set all_images = site.root | helpers.descendants
+     | map(attribute="attachments.images")
+     | map("helpers.call", itertools.chain) | list -%}
+```
+
 ### helpers.call(function, \*args, \*\*kwargs)
 
 This helper can be used to convert a global function to a [jinja
@@ -161,6 +208,10 @@ will provide access to the filters and tests from the
   [html5lib] if possible.  (But note that [excerpt-html] currently
   uses both of those libraries.)
 
+- Perhaps, instead of the `helpers.descandants` filter, a
+  `descendants_query` global, which returns a `Query` object (with
+  `.filter`, `.include_undiscoverable`, &c. methods) would present a
+  more Lektor-uniform API
 
 ## Author
 
