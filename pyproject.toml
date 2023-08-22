@@ -6,6 +6,7 @@ build-backend = "pdm.backend"
 name = "lektor-jinja-helpers"
 version = "0.1.0a1"
 description = "An assortment of Jinja filters, tests, and globals for Lektor"
+keywords = ["lektor plugin", "jinja filters", "jinja tests", "jinja globals"]
 authors = [
     {name = "Jeff Dairiki", email = "dairiki@dairiki.org"},
 ]
@@ -20,6 +21,22 @@ optional-dependencies = {ansible = ["ansible-core"], ansible-full = ["ansible"]}
 requires-python = ">=3.8"
 readme = "README.md"
 license = {text = "BSD-3-Clause"}
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Plugins",
+    "Environment :: Web Environment",
+    "Framework :: Lektor",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Text Processing",
+]
+urls.Homepage = "https://github.com/dairiki/lektor-jinja-helpers"
+
 
 [project.entry-points."lektor.plugins"]
 jinja-helpers = "lektor_jinja_helpers:JinjaHelpersPlugin"
