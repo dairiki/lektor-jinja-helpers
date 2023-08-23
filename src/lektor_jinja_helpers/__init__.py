@@ -1,50 +1,15 @@
 from __future__ import annotations
 
 import importlib
-import sys
 from types import SimpleNamespace
 from typing import Any
-from typing import Callable
-from typing import TypeVar
 
 from lektor.pluginsystem import Plugin
 
 from . import db_helpers
 from . import html_helpers
+from . import misc_helpers
 from .ansible import import_ansible_filters_and_tests
-
-if sys.version_info >= (3, 10):
-    from typing import Concatenate
-    from typing import ParamSpec
-else:
-    from typing_extensions import Concatenate
-    from typing_extensions import ParamSpec
-
-
-_T = TypeVar("_T")
-_U = TypeVar("_U")
-_P = ParamSpec("_P")
-
-
-def do_call(
-    value: _T,
-    function: Callable[Concatenate[_T, _P], _U],
-    *args: _P.args,
-    **kwargs: _P.kwargs,
-) -> _U:
-    """Convert a jinja global function to a filter.
-
-    This filter can be used to apply a global function as a
-    filter. This can be useful when using the ``map`` filter.
-
-    E.g.
-
-        {% set date = import_module("datetime").date -%}
-        {% set dates = ["2023-01-02", "2021-04-01"] -%}
-        Min year: {{ (dates | map("helpers.call", date.fromisoformat) | min).year }}
-
-    """
-    return function(value, *args, **kwargs)
 
 
 FILTERS = {
@@ -52,10 +17,11 @@ FILTERS = {
     "excerpt_html": html_helpers.excerpt_html,
     "lineage": db_helpers.lineage,
     "descendants": db_helpers.descendants,
-    "call": do_call,
+    "call": misc_helpers.call,
+    "flatten": misc_helpers.flatten,
 }
 TESTS = {
-    "call": do_call,
+    "call": misc_helpers.call,
 }
 GLOBALS = {
     "import_module": importlib.import_module,

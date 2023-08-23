@@ -137,6 +137,26 @@ if there are many pages and/or images.)
      | map("helpers.call", itertools.chain) | list -%}
 ```
 
+### helpers.flatten(depth=None)
+
+Flatten a nested structure of iterables.
+
+This filters expects an iterable as input and returns the generator.
+Any iterables contained within the input will be flattened to the top level.
+
+As an example,
+
+    [["foo", "bar"], ["baz"]] | helpers.flatten
+
+will return a generator that will yield ``"foo"``, ``"bar"``, ``"baz"``.
+
+The ``depth`` parameter (if not ``None``) limits the maximum depth of
+flattening performed.  If ``depth`` is less than or equal to zero, no flattening
+is performed.
+
+Strings and ``Mapping``s (though, technically, they are *iterables*)
+are not flattened.
+
 ### helpers.call(function, \*args, \*\*kwargs)
 
 This helper can be used to convert a global function to a [jinja
