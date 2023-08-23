@@ -126,22 +126,22 @@ whether hidden and undiscoverable pages are included in the result.
 Note that, since hidden pages are always undiscoverable, to include hidden pages,
 one must set `include_undiscoverable` as well as `include_hidden`.
 
-As an example, a list of all images contained by all discoverable
-pages on the site may be obtained as follows. (This may be a slow operation
-if there are many pages and/or images.)
+As an example, here we iterate over all images contained by all discoverable
+pages on the site. (This may be a slow operation if there are many pages and/or images.)
 
 ```j2
-{% set itertools = helpers.import_module("itertools") -%}
-{% set all_images = site.root | helpers.descendants
-     | map(attribute="attachments.images")
-     | map("helpers.call", itertools.chain) | list -%}
+<ul>
+  {% for image in site.root | helpers.descendants | map(attribute="attachments.images") | helpers.flatten -%}
+    <li><img src="{{ image | url }}"></li>
+  {% endfor -%}
+</ul>
 ```
 
 ### helpers.flatten(depth=None)
 
 Flatten a nested structure of iterables.
 
-This filters expects an iterable as input and returns the generator.
+This filters expects an iterable as input and returns a generator.
 Any iterables contained within the input will be flattened to the top level.
 
 As an example,
@@ -207,7 +207,7 @@ E.g., to access the current date
 
 ```j2
 {% set date = helpers.import_module("datetime").date -%}
-{{ date.now().isoformat() }}
+{{ date.today().isoformat() }}
 ```
 
 ## Ansible Filter and Test Plugins
