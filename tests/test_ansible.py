@@ -18,7 +18,9 @@ def test_ansible_filter(renderer: RendererFixture) -> None:
 
 
 def test_ansible_test(renderer: RendererFixture) -> None:
-    assert renderer.eval("[[1], [2]] | select('ansible.builtin.contains', 2)") == [[2]]
+    assert renderer.eval(
+        "[[1], [2]] | select('ansible.builtin.contains', 2) | list"
+    ) == [[2]]
 
 
 def test_ansible_missing(renderer: RendererFixture) -> None:

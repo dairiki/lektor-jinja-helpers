@@ -15,6 +15,7 @@ dependencies = [
     "markupsafe>=2.1.3",
     "html5lib>=1.1",
     "beautifulsoup4>=4.12.2",
+    "typing-extensions>=4.7.1; python_version < \"3.10\"",
 ]
 
 requires-python = ">=3.8"
@@ -38,18 +39,23 @@ urls.Homepage = "https://github.com/dairiki/lektor-jinja-helpers"
 
 [project.optional-dependencies]
 ansible = [
-    "ansible-core>=2.8",
+    "ansible-core>=2.13",
 ]
 ansible-full = [
     "ansible",
-    "ansible-core>=2.8",
+    "ansible-core>=2.13",
 ]
 
 [project.entry-points."lektor.plugins"]
 jinja-helpers = "lektor_jinja_helpers:JinjaHelpersPlugin"
 
 [tool.pdm.scripts]
-cover = "pytest --cov=lektor_jinja_helpers --cov-fail-under=100 tests -ra"
+cover = """
+    pytest tests -ra
+        --cov=lektor_jinja_helpers
+        --cov-report=term-missing
+        --cov-report=html
+    """
 
 [tool.pdm.dev-dependencies]
 dev = [
@@ -63,10 +69,6 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-addopts = [
-    "--cov-report=term-missing",
-    "--cov-report=html",
-]
 filterwarnings = [
     "ignore:pkg_resources:DeprecationWarning:lektor.packages",
     "ignore:.*crypt:DeprecationWarning:ansible.utils.encrypt",

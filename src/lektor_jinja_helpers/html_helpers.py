@@ -1,14 +1,21 @@
 from __future__ import annotations
 
+import enum
 import re
-from types import EllipsisType
+import sys
+from typing import Final
 from typing import Literal
-from typing import Never
 from typing import Protocol
 
 import bs4
 from excerpt_html import excerpt_html as _excerpt_html
 from markupsafe import Markup
+
+if sys.version_info >= (3, 11):
+    from typing import Never
+else:
+    from typing import NoReturn as Never
+
 
 __all__ = ["adjust_heading_levels", "excerpt_html"]
 
@@ -98,10 +105,17 @@ def adjust_heading_levels(
     return Markup(soup.decode())
 
 
+class _NotSetType(enum.Enum):
+    NOT_SET = None
+
+
+_NOT_SET: Final = _NotSetType.NOT_SET
+
+
 def excerpt_html(
     html_text: str | HasHTML,
-    min_words: int | None | EllipsisType = ...,
-    cut_mark: str | re.Pattern[str] | None | EllipsisType = ...,
+    min_words: int | None | _NotSetType = _NOT_SET,
+    cut_mark: str | re.Pattern[str] | None | _NotSetType = _NOT_SET,
     **kwargs: Never,
 ) -> Markup:
     """A Jinja2 filter to extract leading portion of HTML text.
@@ -128,7 +142,7 @@ def excerpt_html(
     """
     vars = locals()
     args = {
-        arg: vars[arg] for arg in ("min_words", "cut_mark") if vars[arg] is not Ellipsis
+        arg: vars[arg] for arg in ("min_words", "cut_mark") if vars[arg] is not _NOT_SET
     }
     markup = Markup.escape(html_text)
     excerpt = _excerpt_html(markup, **args, **kwargs)

@@ -1,11 +1,10 @@
 from __future__ import annotations
 
 import importlib
+import sys
 from types import SimpleNamespace
 from typing import Any
 from typing import Callable
-from typing import Concatenate
-from typing import ParamSpec
 from typing import TypeVar
 
 from lektor.pluginsystem import Plugin
@@ -13,6 +12,14 @@ from lektor.pluginsystem import Plugin
 from . import db_helpers
 from . import html_helpers
 from .ansible import import_ansible_filters_and_tests
+
+if sys.version_info >= (3, 10):
+    from typing import Concatenate
+    from typing import ParamSpec
+else:
+    from typing_extensions import Concatenate
+    from typing_extensions import ParamSpec
+
 
 _T = TypeVar("_T")
 _U = TypeVar("_U")
