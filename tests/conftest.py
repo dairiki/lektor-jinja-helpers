@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import jinja2
 import pytest
 from lektor.db import Pad
 from lektor.environment import Environment
@@ -21,5 +22,10 @@ def lektor_pad(lektor_env: Environment) -> Pad:
 
 
 @pytest.fixture
-def renderer(lektor_env: Environment) -> RendererFixture:
-    return RendererFixture(lektor_env.jinja_env)
+def jinja_env(lektor_env: Environment) -> jinja2.Environment:
+    return lektor_env.jinja_env  # type: ignore[no-any-return]
+
+
+@pytest.fixture
+def renderer(jinja_env: jinja2.Environment) -> RendererFixture:
+    return RendererFixture(jinja_env)
