@@ -4,7 +4,7 @@ build-backend = "pdm.backend"
 
 [project]
 name = "lektor-jinja-helpers"
-version = "0.1.0a1"
+dynamic = ["version"]
 description = "An assortment of Jinja filters, tests, and globals for Lektor"
 keywords = ["lektor plugin", "jinja filters", "jinja tests", "jinja globals"]
 authors = [
@@ -48,6 +48,9 @@ ansible-full = [
 
 [project.entry-points."lektor.plugins"]
 jinja-helpers = "lektor_jinja_helpers:JinjaHelpersPlugin"
+
+[tool.pdm.version]
+source = "scm"
 
 [tool.pdm.scripts]
 cover = """
