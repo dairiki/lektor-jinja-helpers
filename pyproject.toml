@@ -34,6 +34,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Topic :: Text Processing",
+    "Typing :: Typed",
 ]
 urls.Homepage = "https://github.com/dairiki/lektor-jinja-helpers"
 
