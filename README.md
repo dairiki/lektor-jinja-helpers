@@ -1,5 +1,7 @@
 # Lektor-jinja-helpers
 
+[![Test status badge](https://img.shields.io/github/actions/workflow/status/dairiki/lektor-jinja-helpers/ci.yml?label=tests)](https://github.com/dairiki/lektor-jinja-helpers/actions/workflows/ci.yml)
+
 This is a [Lektor plugin] that adds an assortment of filters, tests,
 and globals to Lektor’s Jinja environment.
 

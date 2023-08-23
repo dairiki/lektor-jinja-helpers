@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '*'
+    tags:
+      # v* are protected tags
+      - 'v*'
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: Run Tests and Build Python Dist
+    uses: ./.github/workflows/tests.yml
+
+  pypi-publish:
+    name: Upload to PyPI
+    needs: tests
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      id-token: write
+    uses: ./.github/workflows/publish.yml
+    with:
+      environment-url: https://pypi.org/p/lektor-jinja-helpers/
