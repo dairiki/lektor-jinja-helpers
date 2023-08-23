@@ -1,5 +1,8 @@
 # Lektor-jinja-helpers
 
+[![PyPI version](https://img.shields.io/pypi/v/lektor-jinja-helpers.svg)](https://pypi.org/project/lektor-jinja-helpers/)
+[![PyPI Supported Python Versions](https://img.shields.io/pypi/pyversions/lektor-jinja-helpers.svg)](https://pypi.python.org/pypi/lektor-jinja-helpers/)
+[![GitHub license](https://img.shields.io/github/license/dairiki/lektor-jinja-helpers)](https://github.com/dairiki/lektor-jinja-helpers/blob/master/LICENSE)
 [![Test status badge](https://img.shields.io/github/actions/workflow/status/dairiki/lektor-jinja-helpers/ci.yml?label=tests)](https://github.com/dairiki/lektor-jinja-helpers/actions/workflows/ci.yml)
 
 This is a [Lektor plugin] that adds an assortment of filters, tests,
