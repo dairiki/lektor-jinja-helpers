@@ -2,11 +2,11 @@
 # It is not intended for manual editing.
 
 [metadata]
-groups = ["default", "dev"]
+groups = ["default", "ansible", "dev"]
 cross_platform = true
 static_urls = false
 lock_version = "4.3"
-content_hash = "sha256:b807b599ce8788280d1ae529d3fc4e7086c1b8be7204f8a081ade1f23ff8b25b"
+content_hash = "sha256:abc0230c94ae4ad54fa8c52a2247c848799e709d7cec70560235675da532e6e8"
 
 [[package]]
 name = "ansible-core"
