@@ -5,6 +5,7 @@ from typing import Any
 from typing import Iterable
 
 import pytest
+from lektor.db import Pad
 
 from .testlib import RendererFixture
 from lektor_jinja_helpers.misc_helpers import flatten
@@ -41,3 +42,7 @@ def test_flatten(
     result = flatten(iterable, depth=depth)
     assert isinstance(result, abc.Iterator)
     assert list(result) == expected
+
+
+def test_flatten_does_not_flatten_record(lektor_pad: Pad) -> None:
+    assert list(flatten([lektor_pad.root])) == [lektor_pad.root]

@@ -80,14 +80,25 @@ def flatten(
 
             if depth is not None and len(stack) > depth:
                 yield obj
-            elif isinstance(obj, (str, abc.Mapping)):
-                yield obj
-            elif isinstance(obj, abc.ByteString):  # type: ignore[arg-type] # mypy bug?
-                yield obj
+            elif _is_flattenable(obj):
+                stack.append(iter(obj))
             else:
-                try:
-                    stack.append(iter(obj))
-                except TypeError:
-                    yield obj  # not iterable
+                yield obj
 
     return generator()
+
+
+def _is_flattenable(obj: object) -> bool:
+    # NB: we do not treat iterables that do not have an
+    # __iter__ method as flattenable.  That's probably okay.
+    # Lektor Records fall into this latter class and we definitely
+    # don't want to attempt to flatten them.
+    #
+    # (Objects with a __getitem__ that takes integers, but not an
+    # __iter__ are, technically, iterable in that iter() will work on
+    # them.)
+    return (
+        isinstance(obj, abc.Iterable)
+        and not isinstance(obj, (str, abc.Mapping))
+        and not isinstance(obj, abc.ByteString)  # type: ignore[arg-type] # mypy bug?
+    )
