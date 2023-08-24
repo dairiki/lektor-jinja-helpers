@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 from collections import ChainMap
-from typing import Any
+from dataclasses import dataclass
+from typing import Callable
 from typing import Iterator
 from typing import MutableMapping
+from typing import TypeVar
 
 import jinja2
 
@@ -13,79 +15,90 @@ try:
 except ModuleNotFoundError:
     ansible = None
 
+_KT = TypeVar("_KT")
+_VT = TypeVar("_VT")
+
 
 def import_ansible_filters_and_tests(env: jinja2.Environment) -> None:
     """Monkeypatch Jinja environment to make Ansible filters and tests availabled."""
     if ansible is None:
         return  # ansible is not installed
-    if _is_our_chainmap(env.filters):
-        return  # we've already monkey-patched the jinja environment
 
     assert type(env.filters) is dict
     assert type(env.tests) is dict
 
     _init_ansible()
 
+    # Ansible normally monkey-patches a JinjaPluginIntercept instance
+    # directly into jinja's env.filters and env.tests.
+    #
+    # We can't use JinjaPluginIntercept directly for two reasons:
+    #
+    # 1. JinjaPluginIntercept tries to load any dotted name via
+    #    Ansible's plugin mechanism.  Thus it raises KeyError on our
+    #    helper.* names.
+    #
+    # 2. Ansible's loaders allow access to the builtin names using unqualified
+    #    names (e.g. ``dict2items`` for ``ansible.builtin.dict2items``).  We
+    #    don't want to pollute the filter namespace that much.
+
+    def is_fqcn(name: object) -> bool:
+        return isinstance(name, str) and name.count(".") >= 2
+
     env.filters = ChainMap(  # type: ignore[assignment]
         env.filters,
-        _AnsibleLookup(ansible.plugins.loader.filter_loader),
+        _FilterKeys(
+            map=JinjaPluginIntercept({}, ansible.plugins.loader.filter_loader),
+            key_filter=is_fqcn,
+        ),
     )
     env.tests = ChainMap(  # type: ignore[assignment]
         env.tests,
-        _AnsibleLookup(ansible.plugins.loader.test_loader),
+        _FilterKeys(
+            map=JinjaPluginIntercept({}, ansible.plugins.loader.test_loader),
+            key_filter=is_fqcn,
+        ),
     )
 
 
-class _AnsibleLookup(MutableMapping[str, Any]):
-    """Mapping view of filters or tests from Ansible loader.
+@dataclass(frozen=True)
+class _FilterKeys(MutableMapping[_KT, _VT]):
+    """Filter a mapping to mask certain keys.
 
-    Notes
-    ^^^^^
-
-    Ansible normally monkey-patches a JinjaPluginIntercept instance
-    directly into jinja's env.filters and env.tests.
-
-    We can't use JinjaPluginIntercept directly for two reasons:
-
-    1. JinjaPluginIntercept tries to load any dotted name via
-       Ansible's plugin mechanism.  Thus it raises KeyError on our
-       helper.* names.
-
-    2. Ansible's loaders allow access to the builtin names using unqualified
-       names (e.g. ``dict2items`` for ``ansible.builtin.dict2items``).  We
-       don't want to pollute the filter namespace that much.
+    This mapping proxies to a ``map``, however any keys that do not
+    pass the ``key_filter`` predicate are “filtered out”.
 
     """
 
-    def __init__(self, loader: ansible.plugins.loader.Jinja2Loader):
-        self.data = JinjaPluginIntercept({}, loader)
+    map: MutableMapping[_KT, _VT]
+    key_filter: Callable[[object], bool]
 
-    def __getitem__(self, key: str) -> Any:
-        if key.count(".") >= 2:
-            # only allow access to fully qualified names
-            return self.data[key]
-        raise KeyError()
+    def __getitem__(self, key: _KT) -> _VT:
+        if not self.key_filter(key):
+            raise KeyError()
+        return self.map[key]
 
-    def __setitem__(self, key: str, value: Any) -> None:
-        raise NotImplementedError()
+    def __setitem__(self, key: _KT, value: _VT) -> None:
+        if not self.key_filter(key):
+            raise KeyError()
+        self.map[key] = value
 
-    def __delitem__(self, key: str) -> None:
-        raise NotImplementedError()
+    def __delitem__(self, key: _KT) -> None:
+        if not self.key_filter(key):
+            raise KeyError()
+        del self.map[key]
 
-    def __iter__(self) -> Iterator[Any]:
-        return iter(self.data)
+    def __iter__(self) -> Iterator[_KT]:
+        return filter(self.key_filter, self.map)
 
     def __len__(self) -> int:
-        return len(self.data)
+        return sum(1 for _ in self)
 
     def __contains__(self, key: object) -> bool:
-        if isinstance(key, str) and key.count(".") >= 2:
-            return key in self.data
-        return False
-
-
-def _is_our_chainmap(obj: object) -> bool:
-    return isinstance(obj, ChainMap) and isinstance(obj.maps[1], JinjaPluginIntercept)
+        # optimization - not required to implement abc
+        if not self.key_filter(key):
+            return False
+        return key in self.map
 
 
 _need_init = True
