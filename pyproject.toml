@@ -79,6 +79,16 @@ filterwarnings = [
     "ignore:.*crypt:DeprecationWarning:ansible.utils.encrypt",
 ]
 
+
+[tool.coverage.paths]
+paths = [
+    "src/lektor_jinja_helpers",
+    ".tox/**/lektor_jinja_helpers",
+]
+
+[tool.coverage.run]
+source = ["lektor_jinja_helpers"]
+
 [tool.coverage.report]
 exclude_lines = [
     "pragma: no cover",
