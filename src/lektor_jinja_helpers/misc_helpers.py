@@ -1,19 +1,22 @@
 from __future__ import annotations
 
 import sys
-from collections import abc
 from typing import Any
 from typing import Callable
-from typing import Iterable
 from typing import Iterator
 from typing import TypeVar
 
-
-if sys.version_info >= (3, 10):
+if sys.version_info >= (3, 12):
+    from collections.abc import Buffer
+    from collections.abc import Iterable
+    from collections.abc import Mapping
     from typing import Concatenate
     from typing import ParamSpec
 else:
+    from typing_extensions import Buffer
     from typing_extensions import Concatenate
+    from typing_extensions import Iterable
+    from typing_extensions import Mapping
     from typing_extensions import ParamSpec
 
 
@@ -96,9 +99,5 @@ def _is_flattenable(obj: object) -> bool:
     #
     # (Objects with a __getitem__ that takes integers, but not an
     # __iter__ are, technically, iterable in that iter() will work on
-    # them.)
-    return (
-        isinstance(obj, abc.Iterable)
-        and not isinstance(obj, (str, abc.Mapping))
-        and not isinstance(obj, abc.ByteString)  # type: ignore[arg-type] # mypy bug?
-    )
+    # them, even though they *do not* pass isinstance(obj, Iterable).)
+    return isinstance(obj, Iterable) and not isinstance(obj, (str, Mapping, Buffer))
