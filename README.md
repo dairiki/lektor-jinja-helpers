@@ -238,6 +238,8 @@ will provide access to the filters and tests from the
   `.filter`, `.include_undiscoverable`, &c. methods) would present a
   more Lektor-uniform API
 
+- Make defaults (e.g. for ``excerpt_html``) configurable via Lektor plugin config file.
+
 ## Author
 
 Jeff Dairiki <dairiki@dairiki.org>
