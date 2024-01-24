@@ -1,6 +1,6 @@
 ## Changelog
 
-### Release 0.1a2 (unreleased)
+### Release 0.1 (2024-01-24)
 
 #### Bugs Fixed
 
