@@ -4,6 +4,7 @@ import pytest
 from lektor.db import Pad
 
 from .testlib import RendererFixture
+
 from lektor_jinja_helpers.db_helpers import descendants
 from lektor_jinja_helpers.db_helpers import lineage
 
@@ -117,7 +118,7 @@ def test_descendants(
 
 def test_descendants_raises_type_error() -> None:
     with pytest.raises(TypeError):
-        descendants(dict())
+        descendants({})
 
 
 def test_integration(renderer: RendererFixture, lektor_pad: Pad) -> None:

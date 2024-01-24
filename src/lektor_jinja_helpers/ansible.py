@@ -24,8 +24,8 @@ def import_ansible_filters_and_tests(env: jinja2.Environment) -> None:
     if ansible is None:
         return  # ansible is not installed
 
-    assert type(env.filters) is dict
-    assert type(env.tests) is dict
+    assert isinstance(env.filters, dict)
+    assert isinstance(env.tests, dict)
 
     _init_ansible()
 
@@ -75,17 +75,17 @@ class _FilterKeys(MutableMapping[_KT, _VT]):
 
     def __getitem__(self, key: _KT) -> _VT:
         if not self.key_filter(key):
-            raise KeyError()
+            raise KeyError
         return self.map[key]
 
     def __setitem__(self, key: _KT, value: _VT) -> None:
         if not self.key_filter(key):
-            raise KeyError()
+            raise KeyError
         self.map[key] = value
 
     def __delitem__(self, key: _KT) -> None:
         if not self.key_filter(key):
-            raise KeyError()
+            raise KeyError
         del self.map[key]
 
     def __iter__(self) -> Iterator[_KT]:

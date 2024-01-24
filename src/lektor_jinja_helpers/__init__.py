@@ -11,7 +11,6 @@ from . import html_helpers
 from . import misc_helpers
 from .ansible import import_ansible_filters_and_tests
 
-
 FILTERS = {
     "adjust_heading_levels": html_helpers.adjust_heading_levels,
     "excerpt_html": html_helpers.excerpt_html,

@@ -23,10 +23,11 @@ def lineage(obj: SourceObject, include_self: bool = True) -> Iterator[SourceObje
 
     """
     if not isinstance(obj, (Asset, Record, VirtualSourceObject)):
-        raise TypeError(
-            "helper.lineage expects a Record, VirtualSourceObject or an Asset, "
-            f"not {obj!r}"
+        msg = (
+            "helper.lineage expects a Record, VirtualSourceObject or an Asset,"
+            f" not {obj!r}"
         )
+        raise TypeError(msg)
 
     # Note: lineage is not a generator so that TypeError can be raised
     # immediately when the filter is called, rather than when it is
@@ -68,7 +69,8 @@ def descendants(
 
     """
     if not isinstance(root, Page):
-        raise TypeError(f"helper.descendants expects a Page, not {root!r}")
+        msg = f"helper.descendants expects a Page, not {root!r}"
+        raise TypeError(msg)
 
     if root.is_hidden and not include_hidden:
         return iter([])

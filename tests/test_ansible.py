@@ -6,8 +6,8 @@ import jinja2
 import pytest
 
 from .testlib import RendererFixture
-from lektor_jinja_helpers.ansible import _FilterKeys
 
+from lektor_jinja_helpers.ansible import _FilterKeys
 
 try:
     import_module("ansible")

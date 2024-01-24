@@ -4,6 +4,7 @@ import pytest
 from markupsafe import Markup
 
 from .testlib import RendererFixture
+
 from lektor_jinja_helpers.html_helpers import _HeadingLevelNormalizer
 
 

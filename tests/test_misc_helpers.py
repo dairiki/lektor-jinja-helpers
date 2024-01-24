@@ -8,6 +8,7 @@ import pytest
 from lektor.db import Pad
 
 from .testlib import RendererFixture
+
 from lektor_jinja_helpers.misc_helpers import flatten
 
 
