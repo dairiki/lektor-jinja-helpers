@@ -13,10 +13,10 @@ if sys.version_info >= (3, 12):
     from typing import Concatenate
     from typing import ParamSpec
 else:
+    from typing import Iterable
+    from typing import Mapping
     from typing_extensions import Buffer
     from typing_extensions import Concatenate
-    from typing_extensions import Iterable
-    from typing_extensions import Mapping
     from typing_extensions import ParamSpec
 
 

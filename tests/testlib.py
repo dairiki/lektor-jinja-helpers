@@ -18,10 +18,7 @@ class RendererFixture:
 
     def eval(self, expr: str, *args: Any, **kwargs: Any) -> Any:
         result: list[Any] = []
-        self.render(
-            f"{{{{ __set_result({expr}) }}}}",
-            __set_result=result.append,
-            *args,
-            **kwargs,
-        )
+        context = dict(*args, **kwargs)
+        context["__set_result"] = result.append
+        self.render(f"{{{{ __set_result({expr}) }}}}", context)
         return result[0]
