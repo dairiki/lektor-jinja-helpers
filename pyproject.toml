@@ -66,8 +66,7 @@ cover = """
 dev = [
     "lektor>=3.3.10",
     "mypy~=1.8.0",
-    "flake8>=5.0.4",
-    "flake8-bugbear>=23.3.12",
+    "ruff>=0.1.14",
     "pytest>=7.4.0",
     "types-beautifulsoup4>=4.12.0.6",
     "pytest-cov>=4.1.0",
@@ -111,3 +110,34 @@ module = [
     "lektor.*",
 ]
 ignore_missing_imports = true
+
+
+[tool.ruff]
+extend-exclude = [".pdm-build"]
+explicit-preview-rules = true
+allowed-confusables = ["’", "–"]
+
+[tool.ruff.lint]
+select = [
+    "F", # pyflakes
+    "E", "W", # pycodestyle
+    "UP", # pyupgrade
+    "B", # flake8-bugbear
+    "Q", # flake8-quotes
+    "YTT", # flake8-2020
+    "C4", # flake8-comprehensions
+    "T10", # flake8-debugger
+    "EM", # flake8-errmsg
+    "FA", # flake8-future-annotations
+    "T20", # flake8-print
+    "RSE", # flake8-raise
+    "I", # isort
+    "C90", # mccabe
+    "PGH", # pygrep-hooks
+    #"PL", # pylint
+]
+
+[tool.ruff.lint.isort]
+force-single-line = true
+order-by-type = false
+known-first-party = ["lektor_jinja_helpers"]

@@ -1,0 +1,4 @@
+extend = "../pyproject.toml"
+
+[lint.isort]
+section-order = ["future", "standard-library", "third-party", "local-folder", "first-party"]
